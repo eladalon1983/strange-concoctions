@@ -17,9 +17,18 @@ startButton.addEventListener("click", start);
 callButton.addEventListener("click", call);
 hangupButton.addEventListener("click", hangup);
 
+const motionButton = document.getElementById("motionButton");
+const detailButton = document.getElementById("detailButton");
+const textButton = document.getElementById("textButton");
+motionButton.addEventListener("click", motion);
+detailButton.addEventListener("click", detail);
+textButton.addEventListener("click", text);
+
 let startTime;
 const localVideo = document.getElementById("localVideo");
 const remoteVideo = document.getElementById("remoteVideo");
+
+let contentHint;
 
 localVideo.addEventListener("loadedmetadata", function () {
   console.log(`Local video videoWidth: ${this.videoWidth}px,  videoHeight: ${this.videoHeight}px`);
@@ -68,9 +77,13 @@ async function start() {
     console.log("Received local stream");
     localVideo.srcObject = stream;
     localStream = stream;
+    if (contentHint) {
+      const [videoTrack] = localStream.getVideoTracks();
+      videoTrack.contentHint = contentHint;
+    }
     callButton.disabled = false;
   } catch (e) {
-    alert(`getUserMedia() error: ${e.name}`);
+    console(`getUserMedia() error: ${e.name}`);
   }
   if (supportsSetCodecPreferences) {
     const { codecs } = RTCRtpSender.getCapabilities("video");
@@ -261,4 +274,34 @@ function hangup() {
   hangupButton.disabled = true;
   callButton.disabled = false;
   codecPreferences.disabled = false;
+}
+
+function motion() {
+  setContentHint("motion");
+  motionButton.style = "background-color: green";
+  detailButton.style = "background-color: #d84a38";
+  textButton.style = "background-color: #d84a38";
+}
+
+function detail() {
+  setContentHint("detail");
+  motionButton.style = "background-color: #d84a38";
+  detailButton.style = "background-color: green";
+  textButton.style = "background-color: #d84a38";
+}
+
+function text() {
+  setContentHint("text");
+  motionButton.style = "background-color: #d84a38";
+  detailButton.style = "background-color: #d84a38";
+  textButton.style = "background-color: green";
+}
+
+function setContentHint(hint) {
+  contentHint = hint;
+  if (!localStream) {
+    return;
+  }
+  const [videoTrack] = localStream.getVideoTracks();
+  videoTrack.contentHint = contentHint;
 }
