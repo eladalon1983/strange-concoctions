@@ -1,0 +1,59 @@
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="mobile-web-app-capable" content="no" />
+    <link rel="icon" href="#" />
+    <title>Display Surface Constraint</title>
+  </head>
+  <body>
+    <h1 style="text-align: center">Display Surface Constraint</h1>
+    <button onclick='gDM();'>
+      getDisplayMedia()
+    </button>
+    <br /><br />
+    <button onclick='gDM("browser");'>
+      getDisplayMedia({video: {displaySurface: "browser"}})
+    </button>
+    <br /><br />
+    <button onclick='gDM("window");'>
+      getDisplayMedia({video: {displaySurface: "window"}})
+    </button>
+    <br /><br />
+    <button onclick='gDM("monitor");'>
+      getDisplayMedia({video: {displaySurface: "monitor"}})
+    </button>
+    <br /><br />
+    <br /><br />
+    <br /><br />
+    <button onclick='gDM("", true);'>
+      getDisplayMedia({video: true, preferCurrentTab: true})
+    </button>
+    <br /><br />
+    <button onclick='gDM("browser", true);'>
+      getDisplayMedia({video: {displaySurface: "browser"}, preferCurrentTab: true})
+    </button>
+    <br /><br />
+    <button onclick='gDM("window", true);'>
+      getDisplayMedia({video: {displaySurface: "window"}, preferCurrentTab: true})
+    </button>
+    <br /><br />
+    <button onclick='gDM("monitor", true);'>
+      getDisplayMedia({video: {displaySurface: "monitor"}, preferCurrentTab: true})
+    </button>
+
+
+		<script>
+      async function gDM(displaySurface, preferCurrentTab = false) {
+        try {
+          await navigator.mediaDevices.getDisplayMedia({
+            video: {displaySurface: displaySurface},
+            preferCurrentTab: preferCurrentTab
+          });
+        } catch (error) {
+          console.log("Oops!", error);
+        }
+      }
+    </script>
+  </body>
+</html>
