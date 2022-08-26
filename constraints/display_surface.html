@@ -41,9 +41,7 @@
     <button onclick='gDM("monitor", true);'>
       getDisplayMedia({video: {displaySurface: "monitor"}, preferCurrentTab: true})
     </button>
-
-
-		<script>
+    <script>
       async function gDM(displaySurface, preferCurrentTab = false) {
         try {
           await navigator.mediaDevices.getDisplayMedia({
