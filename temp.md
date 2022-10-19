@@ -4,7 +4,7 @@ The proposed API will allow a website to capture an HTML element as a video stre
 
 ```webidl
 partial interface HTMLElement {
-    Promiose<MediaStream> capture(optional double frameRequestRate);
+    Promise<MediaStream> capture(optional double frameRequestRate);
 };
 ```
 
