@@ -8,7 +8,7 @@ partial interface HTMLElement {
 };
 ```
 
-In a way, this can be thought of as [HTMLCanvasElement.captureStream()](https://w3c.github.io/mediacapture-fromelement/#html-canvas-element-media-capture-extensions), expanded to any HTMLElement, with some additional security gating added to address the concern of leaking cross-origin content.
+In a way, this can be thought of as similar to [HTMLCanvasElement.captureStream()](https://w3c.github.io/mediacapture-fromelement/#html-canvas-element-media-capture-extensions), expanded to any HTMLElement, with some additional security gating added to address the concern of leaking cross-origin content.
 
 
 ## Introduction
