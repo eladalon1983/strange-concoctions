@@ -25,7 +25,7 @@ It is also possible to crop the resulting video using [Region Capture](https://w
 2. When filing feedback, cropping helps remove irrelevant, and potentially private information, from the report.
 3. When producing local recordings of an app's output, cropping lets the app remove its own UI elements if it deems them irrelevant to the captured content. For example, video-editing software can crop away the progress bar.
 
-### Room for Improvement
+### Issues
 
 The main technique available nowadays is to use getDisplayMedia() and Region Capture; in some ways, it's the only technique. One major downside is that this captures both occluding as well as occluded content.
 
