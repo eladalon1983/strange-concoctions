@@ -17,7 +17,7 @@ The discussion is therefore scoped to the use case we can hope to address - impr
 We note some challenges that a good solution must address:
 * A captured tab’s top-level document may be navigated at any time. When that happens, any MessagePort that the capturer may be holding from before, becomes useless. The capturer should stop using it. An event is needed.
 * Similarly, if [surfaceSwitching](https://w3c.github.io/mediacapture-screen-share/#dom-displaymediastreamoptions-surfaceswitching) is specified, users may change the captured tab at any time.
-* The captured document may become ready to receive messages either before or after the capture starts. This again suggests that thhe capturer needs an event.
+* The captured document may become ready to receive messages either before or after the capture starts. This again suggests that the capturer needs an event.
 * Multiple concurrent captures are possible. (The capturers may be distinct - or not.)
 * It is desirable that the capturee would only become alerted to the presence of a new capture-session, if the capturer chooses to take an action that reveals this.
 
