@@ -17,7 +17,7 @@ The discussion is therefore scoped to the use case we can hope to address - impr
 We note some challenges that a good solution must address:
 * A captured tab’s top-level document may be navigated at any time. When that happens, any MessagePort that the capturer may be holding from before, becomes useless. The capturer should stop using it. An event is needed.
 * Similarly, if [surfaceSwitching](https://w3c.github.io/mediacapture-screen-share/#dom-displaymediastreamoptions-surfaceswitching) is specified, users may change the captured tab at any time.
-* The captured document may become ready to receive messages either before or after the capture starts. This again suggests an event.
+* The captured document may become ready to receive messages either before or after the capture starts. This again suggests that thhe capturer needs an event.
 * Multiple concurrent captures are possible. (The capturers may be distinct - or not.)
 * It is desirable that the capturee would only become alerted to the presence of a new capture-session, if the capturer chooses to take an action that reveals this.
 
@@ -25,36 +25,60 @@ We note some challenges that a good solution must address:
 
 Observe that Capture Handle already produces events that can be used on the capturing side to address the challenges specified above.
 
-Add the following API surface on the captured side:
 
+Extend [CaptureHandleConfig](https://w3c.github.io/mediacapture-handle/identity/index.html#dom-capturehandleconfig) with an event handler:
 ```webidl
-partial interface MediaDevices {
-  attribute EventHandler onnewcapturer;
-}
+partial dictionary CaptureHandleConfig {
+  EventHandler newCapturerEventHandler;
+};
 ```
 
-This allows the capturee to receive an event with a MessagePort whenever a capturer **chooses** to initiate contact.
+This allows the capturee to receive a dedicated event with a MessagePort whenever a capturer **chooses** to initiate contact.
+
 ```webidl
 interface NewCapturerEvent {
+  attribute Type type;  // "started" or "stopped"
   attribute MessagePort port;
 }
 ```
 
-To trigger this event on the capturee, a capturer calls the following API:
+A channel is established for the capturee when it gets a NewCapturerEvent with `type` set to "started". When the session ends, the capturee gets a new event with the very same port, but with `type` now set to "stopped".
+
+
+To trigger the "started" event on the capturee, a capturer calls the following API:
 ```webidl
 partial interface CaptureController {
   MessagePort getMessagePort();
 }
 ```
 
-This method throws an exception if called more than once.
+To check if it makes sense to call getMessagePort(), the capturer can check `CaptureHandle.supportsMessagePort`.
+```webidl
+partial dictionary CaptureHandle {
+  boolean supportsMessagePort;
+};
+```
 
-If the capturee is navigated, the channel is disconnected. Similarly, if the user uses [dynamic switching](https://w3c.github.io/mediacapture-screen-share/#dom-displaymediastreamoptions-surfaceswitching) to change the capturee, the channel is disconnected.
+The capturee may change the CaptureHandleConfig **without** breaking off existing channels.
+
+The channel **is** broken if:
+* The capture-session ends for whatever reason. (User-initiated or app-initiated.)
+* The capturee is navigated.
+* The user uses [dynamic switching](https://w3c.github.io/mediacapture-screen-share/#dom-displaymediastreamoptions-surfaceswitching) to change the captured surface.
+
+We extend the [capturehandlechange](https://w3c.github.io/mediacapture-handle/identity/index.html#dfn-capturehandlechange) event to help the capturer distinguish non-channel-breaking events from channel-breaking events.
+```webidl
+interface CaptureHandleChangeEvent {
+  attribute boolean messagePortInvalidated;
+}
+```
+
 
 ## Fine Details
 
-* getMessagePort() returns a port leading to the capturee indicated by the last [capturehandlechange](https://w3c.github.io/mediacapture-handle/identity/index.html#dfn-capturehandlechange) which was processed by the capturer. If the capturee has since been navigated, or [dynamically switched](https://w3c.github.io/mediacapture-screen-share/#dom-displaymediastreamoptions-surfaceswitching) by the user, then the MessagePort received will be useless, and the capturer will realize that when it processes the event it has queued.
+* getMessagePort() throws if `!getCaptureHandle().supportsMessagePort`.
+* getMessagePort() returns a port leading to the capturee indicated by the last [capturehandlechange](https://w3c.github.io/mediacapture-handle/identity/index.html#dfn-capturehandlechange) which was processed by the capturer. This MessagePort might already be useless, e.g. if the captured tab has been asynchronously navigated. This will be detected by the capturer when it processes the relevant event.
 * If the user uses [dynamic switching](https://w3c.github.io/mediacapture-screen-share/#dom-displaymediastreamoptions-surfaceswitching) to change away from a tab and back to it, the old channel remains disconnected. The capturer and capturee must establish a new connection.
 
 ## Open Issues
-* Should the capturee be informed when the capture ends, or shall we leave it holding a now-useless MessagePort? Given that the applications are likely tightly-coupled, either approach seems fine, but probably simpler to start without such an event for now, and add it later if it becomes necessary.
+* Should the capturer be allowed to call getMessagePort() multiple times and establish multiple connections with the same capturee? That could potentially mislead the capturee as to how many capture-sessions there are. However, that seems like a niche concern, especially given that the apps are tightly-coupled.
