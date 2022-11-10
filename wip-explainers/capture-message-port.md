@@ -52,12 +52,13 @@ partial interface CaptureController {
 }
 ```
 
-To check if it makes sense to call getMessagePort(), the capturer can check `CaptureHandle.supportsMessagePort`.
+To check if it makes sense to call getMessagePort(), the capturer must check `CaptureHandle.supportsMessagePort`.
 ```webidl
 partial dictionary CaptureHandle {
   boolean supportsMessagePort;
 };
 ```
+The value of `CaptureHandle.supportsMessagePort` is determined by whether the capturee has set a handler or not.
 
 The capturee may change the CaptureHandleConfig **without** breaking off existing channels.
 
@@ -73,12 +74,11 @@ interface CaptureHandleChangeEvent {
 }
 ```
 
-
 ## Fine Details
 
 * getMessagePort() throws if `!getCaptureHandle().supportsMessagePort`.
 * getMessagePort() returns a port leading to the capturee indicated by the last [capturehandlechange](https://w3c.github.io/mediacapture-handle/identity/index.html#dfn-capturehandlechange) which was processed by the capturer. This MessagePort might already be useless, e.g. if the captured tab has been asynchronously navigated. This will be detected by the capturer when it processes the relevant event.
-* If the user uses [dynamic switching](https://w3c.github.io/mediacapture-screen-share/#dom-displaymediastreamoptions-surfaceswitching) to change away from a tab and back to it, the old channel remains disconnected. The capturer and capturee must establish a new connection.
+* If the user uses [dynamic switching](https://w3c.github.io/mediacapture-screen-share/#dom-displaymediastreamoptions-surfaceswitching) to change away from a tab and back to it, the old channel remains disconnected. The capturer and capturee may establish a new connection if they still want to talk.
 
 ## Open Issues
 * Should the capturer be allowed to call getMessagePort() multiple times and establish multiple connections with the same capturee? That could potentially mislead the capturee as to how many capture-sessions there are. However, that seems like a niche concern, especially given that the apps are tightly-coupled.
