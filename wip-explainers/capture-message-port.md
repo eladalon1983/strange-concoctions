@@ -80,5 +80,45 @@ interface CaptureHandleChangeEvent {
 * getMessagePort() returns a port leading to the capturee indicated by the last [capturehandlechange](https://w3c.github.io/mediacapture-handle/identity/index.html#dfn-capturehandlechange) which was processed by the capturer. This MessagePort might already be useless, e.g. if the captured tab has been asynchronously navigated. This will be detected by the capturer when it processes the relevant event.
 * If the user uses [dynamic switching](https://w3c.github.io/mediacapture-screen-share/#dom-displaymediastreamoptions-surfaceswitching) to change away from a tab and back to it, the old channel remains disconnected. The capturer and capturee may establish a new connection if they still want to talk.
 
+## Security Considerations
+
+Captured apps are encouraged to validate the origin of messages.
+As MessagePorts are transferrable, it is imperative to check each individual message's origin.
+
 ## Open Issues
 * Should the capturer be allowed to call getMessagePort() multiple times and establish multiple connections with the same capturee? That could potentially mislead the capturee as to how many capture-sessions there are. However, that seems like a niche concern, especially given that the apps are tightly-coupled.
+
+## Sample Usage
+
+On the captured side:
+
+```js
+function onPageLoaded() {
+  setCaptureHandleConfig({
+    exposeOrigin: true,
+    handle: "...",
+    permittedOrigins: [...],
+    newCapturerEventHandler: onNewCapturer,
+  });
+}
+
+function onNewCapturer(event) {
+  if (event.type == "started" &&
+      IsTrustedOrigin(event.origin)) {
+    StartCommunicationWithNewCapturer(event.port);
+  }
+}
+```
+
+On the capturing side:
+```js
+const stream = await navigator.mediaDevices.getDisplayMedia();
+const [track] = stream.getVideoTracks();
+track.oncapturehandlechange = (event) => {
+  const handle = track.getCaptureHandle();
+  if (handle && IsTrustedOrigin(handle.origin) &&
+      handle.supportsMessagePort) {
+      StartCommunicationWithCapturee(handle.getMessagePort())
+  }
+};
+```
