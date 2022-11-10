@@ -6,7 +6,7 @@ Capture Handle introduced the ability for a capturee to declare its identity to 
 
 ## Scoping
 
-Note that a MessagePort cannot address all use cases we have in mind, and cannot replace Capture Handle, nor some of its future extensions.
+Note that a MessagePort cannot address all use cases we have in mind, and cannot replace Capture Handle, nor some of Capture Handle's future extensions.
 * Conditional Focus requires an immediate decision, or else the window of opportunity closes.
 * Loosely-coupled applications have no use for MessagePort, as the messages flowing over it will be in an unrecognized format.
 
