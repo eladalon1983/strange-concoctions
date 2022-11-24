@@ -2,18 +2,13 @@
 
 ## Background
 
-Screen-capture is useful in many contexts.
-* When delivering presentations
-* When collaborating with remote colleagues
-* When producing local recordings
-
-The Web Platform offers APIs to that end, allowing Web applications to capture screens, windows or tabs, and allowing the captured media to be manipulated in various productive ways.
+Screen-capture is useful in many contexts, such as when delivering presentations, collaborating with remote colleagues,  or producing local recordings. The Web Platform offers APIs to that end, allowing Web applications to capture screens, windows or tabs, and allowing the captured media to be manipulated in various productive ways.
 
 The popularity of these APIs, and the ubiquity of the applications that use them, are a testament to the importance of the work that has been done thus far.
 
 ## Mission
 
-We believe that there is still untapped potential in the realm of screen-capture. It is our mission to innovate further and unblock additional novel uses of screen-capture.
+We believe that there is yet more untapped potential in the realm of screen-capture. It is our mission to innovate further and unblock additional novel uses of screen-capture, creating new business opportunities for developers and enriching the lives of users.
 
 ## Scope
 
