@@ -12,7 +12,7 @@ We believe that there is yet more untapped potential in the realm of screen-capt
 
 ## Scope
 
-As part of this charter, the Screen-capture Community Group is focusing its activities on extending existing screen-capture APIs, and on producing new APIs, both for screen-capture itself, as well as for adjacent functionality.
+As part of this charter, the Screen-capture Community Group is focusing its activities on producing new screen-capture APIs and extending existing ones. APIs directly involving screen-capture are in scope, as are APIs that would typically be used in tandem with screen-capture.
 
 ## Work mode
 
