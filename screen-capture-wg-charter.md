@@ -18,7 +18,7 @@ As part of this charter, the Screen-capture Community Group is focusing its acti
 
 The group will conduct all of its technical work in public, on GitHub repositories, with a supporting mailing list for logistical and administrative purposes.
 
-Meetings will initially be public and open to anyone to join. Should the need arise, meetings may be restricted to Community Group participants and guests invited by the group chairs. In either case, a public summary or minutes will be made available publicly.
+Meetings will normally be public and open to anyone to join. Should the need arise, meetings may be restricted to Community Group participants and guests invited by the group chairs. In either case, a public summary or minutes will be made available publicly.
 
 ## Amendments to this charter
 The group chairs can propose the group adopt an amended charter, editing the text using the Decision Process described below.
